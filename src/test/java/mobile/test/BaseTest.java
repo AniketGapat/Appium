@@ -5,6 +5,7 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
+import org.openqa.selenium.DeviceRotation;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebElement;
@@ -66,6 +67,21 @@ public class BaseTest {
         }
     }
 
+    public void jumpToPage(String appPackage, String appActivity) {
+        // Jump to the settings app
+        driver.executeScript("mobile: startActivity",
+                ImmutableMap.of("appPackage",appPackage,
+                        "appActivity",appActivity));
+    }
+
+    public void rotateScreen(String orientation) {
+        if (orientation.equalsIgnoreCase("landscape")) {
+            driver.rotate(new DeviceRotation(0, 0, 90));
+        } else if (orientation.equalsIgnoreCase("portrait")) {
+            driver.rotate(new DeviceRotation(0, 0, 0));
+        }
+    }
+
     public void longPress(WebElement element){
         ((JavascriptExecutor)driver).executeScript("mobile: longClickGesture",
                 ImmutableMap.of("elementId", ((RemoteWebElement)element).getId(),
@@ -77,5 +93,12 @@ public class BaseTest {
                 ImmutableMap.of("elementId", ((RemoteWebElement) element).getId(),
                         "direction", direction,
                         "percent", 0.75));
+    }
+
+    public void dragAndDrop(WebElement source, WebElement target) {
+        ((JavascriptExecutor) driver).executeScript("mobile: dragGesture",
+                ImmutableMap.of("elementId", ((RemoteWebElement) source).getId(),
+                        "toElementId", ((RemoteWebElement) target).getId(),
+                        "duration", 1000));
     }
 }
