@@ -49,7 +49,7 @@ public class AppiumBasics extends BaseTest {
     @Test
     public void scrollTest() {
         driver.findElement(AppiumBy.accessibilityId("Views")).click();
-        driver.findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text(\"WebView\"));")).click();
+        driver.findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text(\"WebView\"));"));
         Assert.assertTrue(driver.findElement(AppiumBy.accessibilityId("WebView")).isDisplayed());
     }
 
