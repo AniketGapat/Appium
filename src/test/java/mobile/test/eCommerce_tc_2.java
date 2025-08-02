@@ -45,7 +45,7 @@ public class eCommerce_tc_2 extends BaseTest {
         longPress(ele);
         driver.findElement(By.id("android:id/button1")).click(); // Click on the CLOSE button in the terms and conditions dialog
 
-        // Select teh checkbox and Proceed to checkout
+        // Select the checkbox and Proceed to checkout
         driver.findElement(By.className("android.widget.Checkbox")).click();
         driver.findElement(By.id("com.androidsample.generalstore:id/btnProceed")).click();
     }
