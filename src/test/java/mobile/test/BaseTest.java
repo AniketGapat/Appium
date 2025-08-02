@@ -1,10 +1,13 @@
 package mobile.test;
 
 import com.google.common.collect.ImmutableMap;
+import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
+import org.openqa.selenium.By;
+import org.openqa.selenium.DeviceRotation;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebElement;
@@ -47,7 +50,8 @@ public class BaseTest {
         UiAutomator2Options options = new UiAutomator2Options();
         options.setDeviceName("AniketEmulator");
         options.setUiautomator2ServerLaunchTimeout(Duration.ofMillis(60000));
-        options.setApp("C:\\Users\\LENOVO\\eclipse-workspace\\Appium\\src\\test\\java\\resources\\ApiDemos-debug.apk");
+       // options.setApp("C:\\Users\\LENOVO\\eclipse-workspace\\Appium\\src\\test\\java\\resources\\ApiDemos-debug.apk");
+        options.setApp("C:\\Users\\LENOVO\\eclipse-workspace\\Appium\\src\\test\\java\\resources\\General-Store.apk");
         driver = new AndroidDriver(new URI("http://127.0.0.1:4723").toURL(), options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
@@ -66,6 +70,21 @@ public class BaseTest {
         }
     }
 
+    public void jumpToPage(String appPackage, String appActivity) {
+        // Jump to the settings app
+        driver.executeScript("mobile: startActivity",
+                ImmutableMap.of("appPackage",appPackage,
+                        "appActivity",appActivity));
+    }
+
+    public void rotateScreen(String orientation) {
+        if (orientation.equalsIgnoreCase("landscape")) {
+            driver.rotate(new DeviceRotation(0, 0, 90));
+        } else if (orientation.equalsIgnoreCase("portrait")) {
+            driver.rotate(new DeviceRotation(0, 0, 0));
+        }
+    }
+
     public void longPress(WebElement element){
         ((JavascriptExecutor)driver).executeScript("mobile: longClickGesture",
                 ImmutableMap.of("elementId", ((RemoteWebElement)element).getId(),
@@ -77,5 +96,24 @@ public class BaseTest {
                 ImmutableMap.of("elementId", ((RemoteWebElement) element).getId(),
                         "direction", direction,
                         "percent", 0.75));
+    }
+
+    public void dragAndDrop(WebElement source, WebElement target) {
+        ((JavascriptExecutor) driver).executeScript("mobile: dragGesture",
+                ImmutableMap.of("elementId", ((RemoteWebElement) source).getId(),
+                        "toElementId", ((RemoteWebElement) target).getId(),
+                        "duration", 1000));
+    }
+
+    public void generalStoreLogin(String name, String country){
+        driver.findElement(By.id("com.androidsample.generalstore:id/nameField")).sendKeys(name);
+        driver.hideKeyboard();
+        driver.findElement(By.id("com.androidsample.generalstore:id/radioMale")).click();
+        driver.findElement(By.id("android:id/text1")).click();
+//        driver.findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text(\"India\"));"));
+//        driver.findElement(By.xpath("//android.widget.TextView[@text='India']")).click();
+        driver.findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text(\""+country+"\"));"));
+        driver.findElement(By.xpath("//android.widget.TextView[@text='"+country+"']")).click();
+        driver.findElement(By.id("com.androidsample.generalstore:id/btnLetsShop")).click();
     }
 }
